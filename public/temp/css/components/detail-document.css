@@ -1,0 +1,56 @@
+.parameter-docunment {
+  padding: 10px 0 10px 0; }
+
+.btn-download span {
+  text-transform: uppercase;
+  font-size: 18px; }
+
+.related-document {
+  border: 1px solid #b5b5b5;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px; }
+
+.related-document-item {
+  border-bottom: 1px solid #b5b5b5;
+  cursor: pointer; }
+
+.related-document-item:hover {
+  background-color: #e0e0e0; }
+
+.related-document-item a {
+  text-decoration: none;
+  color: #5c5c5c; }
+
+.related-document-item i {
+  color: #5c5c5c; }
+
+/* -----------------------------comments----- */
+.comment-avata {
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px; }
+
+.comment-avata i {
+  font-size: 20px;
+  color: #2a70b8; }
+
+.comment-user-info {
+  flex: 1; }
+
+.comment-user-info-item a {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600; }
+
+.comment-user-info-item i {
+  font-size: 15px; }
+
+.comment-user-info-item span {
+  font-size: 14px;
+  color: #b5b5b5; }
+
+.comment-user-desc {
+  font-size: 15px; }
+
+/*# sourceMappingURL=detail-document.css.map */

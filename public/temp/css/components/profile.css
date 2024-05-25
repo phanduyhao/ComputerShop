@@ -1,0 +1,61 @@
+.pr-sub {
+  background-color: #fff;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid #b5b5b5; }
+
+.avata-user {
+  overflow: hidden;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%; }
+
+.avata-user img {
+  width: 90px;
+  height: 50px; }
+
+.pr-sub-name {
+  font-size: 20px;
+  color: #2a70b8;
+  font-weight: 700; }
+
+.pr-sub-point {
+  color: #8c8b8b; }
+
+.pr-sub-nav {
+  text-align: center;
+  padding: 8px 5px; }
+
+.pr-sub-nav:hover {
+  background-color: #2a70b8; }
+
+.pr-sub-nav:hover .pr-sub-nav-item {
+  color: #fff; }
+
+.pr-sub-nav-item {
+  font-size: 18px;
+  text-decoration: none; }
+
+.info-pr {
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #b5b5b5;
+  overflow: hidden; }
+
+.info-pr-titel {
+  background-color: #2a70b8; }
+
+.info-pr-titel-name {
+  text-transform: uppercase;
+  font-size: 25px;
+  font-weight: 600;
+  text-align: center;
+  color: #fff; }
+
+.info-pr-item {
+  padding: 10px 0; }
+
+/*# sourceMappingURL=profile.css.map */
