@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Cart;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Cart;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,10 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('layouts.header', function ($view) {
             $menus = Category::all();
-            $count_cart = Cart::count();
+            if (Auth::check()) {
+                $count_cart = Cart::where('user_id', Auth::user()->id)->count();
+            }
+            $count_cart = 0;
             $view->with('menus', $menus)->with('count_cart', $count_cart);
         });
     }
