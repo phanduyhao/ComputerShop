@@ -28,7 +28,11 @@ class AppServiceProvider extends ServiceProvider
             if (Auth::check()) {
                 $count_cart = Cart::where('user_id', Auth::user()->id)->count();
             }
-            $count_cart = 0;
+            $count_cart = 0; // Default value
+
+            if (Auth::check()) {
+                $count_cart = Cart::where('user_id', Auth::user()->id)->count();
+            }            
             $view->with('menus', $menus)->with('count_cart', $count_cart);
         });
     }

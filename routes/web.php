@@ -35,6 +35,7 @@ Route::get('/posts', [MainPostController::class, 'index'])->name('post');
 Route::get('/posts/{slug}', [MainPostController::class, 'details'])->name('posts.details');
 
 // Danh sách sản phẩm theo danh mục
+Route::get('/products', [MainProductController::class, 'allProduct'])->name('products.allProduct');
 Route::get('/products/{categorySlug}', [MainProductController::class, 'ShowProduct'])->name('products.showProduct');
 
 // Chi tiết sản phẩm

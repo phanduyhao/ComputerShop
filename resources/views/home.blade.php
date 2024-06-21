@@ -179,7 +179,7 @@
     <!-- /End Items Grid Area -->
 
     <!-- Start Items Grid Area -->
-    <section class="items-grid section">
+    <section class="items-grid section pt-0">
         <div class="container">
             <div class="row">
                 <div class="col-12">

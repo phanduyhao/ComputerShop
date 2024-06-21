@@ -9,10 +9,18 @@ use Illuminate\Http\Request;
 class MainProductController extends Controller
 {
 
+    public function allProduct()
+    {
+        $products = Product::where('active', 1)->paginate(6);
+        return view('product.all_product', compact('products'),[
+            'title'=>'Tất cả Sản phẩm '
+        ]);
+    }
+
     public function ShowProduct($categorySlug)
     {
         $category = Category::where('slug', $categorySlug)->firstOrFail();
-        $products = Product::where('cate_id', $category->id)->paginate(6);
+        $products = Product::where('active', 1)->where('cate_id', $category->id)->paginate(6);
 
         return view('product.list_product', compact('category', 'products'),[
             'title'=>'Sản phẩm '. $category->title

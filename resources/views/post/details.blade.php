@@ -6,7 +6,7 @@
             <div class="row align-items-center">
 
                 <div class="col-lg-6 col-md-6 col-12">
-                    <ul class="breadcrumb-nav">
+                    <ul class="breadcrumb-nav text-nowrap">
                         <li><a href="/">Trang chủ</a></li>
                         <li>{{$post->Title}}</li>
                     </ul>
