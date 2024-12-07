@@ -25,14 +25,10 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('layouts.header', function ($view) {
             $menus = Category::all();
+            $count_cart = 0;
             if (Auth::check()) {
                 $count_cart = Cart::where('user_id', Auth::user()->id)->count();
             }
-            $count_cart = 0; // Default value
-
-            if (Auth::check()) {
-                $count_cart = Cart::where('user_id', Auth::user()->id)->count();
-            }            
             $view->with('menus', $menus)->with('count_cart', $count_cart);
         });
     }

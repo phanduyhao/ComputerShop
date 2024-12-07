@@ -8,7 +8,7 @@
                     <div class="hero-text text-center">
                         <!-- Start Hero Text -->
                         <div class="section-heading">
-                            <h2 class="wow fadeInUp" data-wow-delay=".3s">Chào mừng đến với Văn Hiệp - Computer</h2>
+                            <h2 class="wow fadeInUp" data-wow-delay=".3s">Chào mừng đến với Đức Dương - Computer</h2>
                             <p class="wow fadeInUp" data-wow-delay=".5s">Bán các loại máy tính, laptop và các linh kiện liên quan.</p>
                         </div>
                         <!-- End Search Form -->
@@ -179,7 +179,7 @@
     <!-- /End Items Grid Area -->
 
     <!-- Start Items Grid Area -->
-    <section class="items-grid section pt-0">
+    <section class="items-grid section">
         <div class="container">
             <div class="row">
                 <div class="col-12">

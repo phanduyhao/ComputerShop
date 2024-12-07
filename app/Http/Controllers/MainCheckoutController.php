@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Address;
 use App\Models\Cart;
-use App\Models\Product;
 use App\Models\Order;
+use App\Models\Address;
+use App\Models\Product;
+use App\Models\AdminHistory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 session_start();
 class MainCheckoutController extends Controller
 {
     public function ShowToCheckout(){
-        $addresses = Address::where('user_id',auth()->id())->get();
+        $addresses = Address::where('user_id',Auth::user()->id)->get();
         return view('checkout.checkout',compact('addresses'),[
             'title' => 'Mua hàng'
         ]);
@@ -39,6 +40,7 @@ class MainCheckoutController extends Controller
             'district.required' => 'Vui lòng nhập Quận / Huyện !',
             'address.required' => 'Vui lòng nhập Số đường / số nhà !',
         ]);
+        $order = new Order;
         $existingRecord = Address::where('sdt', $request->sdt)
             ->where('name', $request->name)
             ->where('Country', $request->Country)
@@ -58,11 +60,14 @@ class MainCheckoutController extends Controller
             $address->wards = $request->wards;
             $address->address = $request->address;
             $address->save();
+            $order->address_id = $address->id;
+
+        }else{
+            $order->address_id = $existingRecord->id;
         }
 
         $cartItems = Cart::all();
         // Lưu dữ liệu vào bảng Orders
-        $order = new Order;
         $order->user_id = Auth::id(); // Điền user_id tương ứng từ bảng Cart
         $productsData = [];
         foreach ($cartItems as $cartItem) {
@@ -73,6 +78,8 @@ class MainCheckoutController extends Controller
                     'price' => $cartItem->price,
                     'quantity' => $cartItem->quanity,
                     'subtotal' => $cartItem->subtotal,
+                    'sizes' => $cartItem->sizes,
+                    'colors' => $cartItem->colors,
                     // Thêm các trường khác nếu cần thiết
                 ];
 
@@ -86,9 +93,14 @@ class MainCheckoutController extends Controller
             }
         }
         $order->products = json_encode($productsData);
-        $order->total = $request->total;
+        $order->total = $request->total2;
+        $order->status = 1;
         $order->save();
-
+        $admin_history = new AdminHistory;
+        $admin_history->amount = $request->total2;
+        $admin_history->order_id = $order->id;
+        $admin_history->user_id = Auth::user()->id;
+        $admin_history->save();
         Cart::truncate();
         return redirect()->route('checkout.success');
     }
@@ -97,7 +109,7 @@ class MainCheckoutController extends Controller
     public function showOrder(){
         $order = Order::latest('id')->first();
         $time = $order->updated_at;
-        return view("checkout.success",compact('time'),[
+        return view("checkout.success",compact('order'),[
             'title' => 'Thanh toán thành công!'
         ]);
     }

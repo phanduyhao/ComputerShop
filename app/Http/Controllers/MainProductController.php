@@ -8,19 +8,39 @@ use Illuminate\Http\Request;
 
 class MainProductController extends Controller
 {
-
-    public function allProduct()
+    public function shop(Request $request)
     {
-        $products = Product::where('active', 1)->paginate(6);
-        return view('product.all_product', compact('products'),[
-            'title'=>'Tất cả Sản phẩm '
+        // Lấy danh sách sản phẩm theo cate_id của danh mục
+        $query = Product::where('active', 1);
+        $nameProduct = $request->nameProduct;
+
+            // Kiểm tra xem có yêu cầu tìm kiếm không
+        if ($request->has('nameProduct') && $nameProduct != '') {
+            $query->where('Title', 'LIKE', '%' . $nameProduct . '%'); // Tìm kiếm theo tên sản phẩm
+        }
+        // Kiểm tra xem có yêu cầu sắp xếp theo giá không
+        if ($request->has('sort')) {
+            if ($request->sort == 1) {
+                $query->orderBy('id', 'asc'); // Thấp đến cao
+            } elseif ($request->sort == 2) {
+                $query->orderBy('id', 'desc'); // Cao đến thấp
+            }
+        }
+        $pages = 6;
+        // Phân trang sản phẩm
+        $products = $query->paginate($pages);
+        
+        // Lấy danh sách các danh mục con không có cha
+        $category_no_parent_ids = Category::where('parent_id', '!=', null)->get();
+        return view('product.all_product', compact( 'products', 'category_no_parent_ids','pages','nameProduct'),[
+            'title'=>'Cửa hàng'
         ]);
     }
 
     public function ShowProduct($categorySlug)
     {
         $category = Category::where('slug', $categorySlug)->firstOrFail();
-        $products = Product::where('active', 1)->where('cate_id', $category->id)->paginate(6);
+        $products = Product::where('cate_id', $category->id)->paginate(6);
 
         return view('product.list_product', compact('category', 'products'),[
             'title'=>'Sản phẩm '. $category->title

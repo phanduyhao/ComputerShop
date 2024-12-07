@@ -65,7 +65,7 @@
                     <div class="single-footer f-contact">
                         <h3>Liên hệ</h3>
                         <ul>
-                            <li> Nguyễn Văn Hiệp</li>
+                            <li> Trịnh Đức Dương</li>
                         </ul>
                     </div>
                     <!-- End Single Widget -->

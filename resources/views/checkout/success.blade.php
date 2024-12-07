@@ -1,78 +1,66 @@
 @extends('layouts.layout')
+
 @section('content')
+<div class="container mt-5" style="padding: 200px 0">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-success text-center">🎉 Đặt hàng thành công! 🎉</h2>
+        <p class="text-center">Cảm ơn bạn đã mua hàng! Dưới đây là thông tin đơn hàng của bạn:</p>
 
-    <div class="breadcrumbs">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 col-md-6 col-12">
-                    <div class="breadcrumbs-content">
-                        <h1 class="page-title">{{$title}}</h1>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-12">
-                    <ul class="breadcrumb-nav">
-                        <li><a href="/">Trang chủ</a></li>
-                        <li>{{$title}}</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="success-info text-center mt-5">
-        <span>
-            <svg style="width: 100px; height: 100px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#32a71b" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path></svg>
-        </span>
-        <h1 class="mt-3">THÀNH CÔNG</h1>
-    </div>
-    <div class="container my-5">
-        <div class="dashboard-block  mt-0">
-            <h3 class="block-title">Đơn hàng</h3>
-
-            <div class="my-items">
-                <!-- Start List Title -->
-                <div class="item-list-title">
-                    <div class="row align-items-center text-center">
-                        <div class="col-1 ">
-                            <p>STT</p>
-                        </div>
-                        <div class="col-md-1 col-12">
-                            <p>Ảnh</p>
-                        </div>
-                        <div class="col-md-4 col-12">
-                            <p>Tên sản phẩm</p>
-                        </div>
-                        <div class="col-md-2 col-12 ">
-                            <p>Giá</p>
-                        </div>
-                        <div class="col-md-2 col-12 ">
-                            <p>Số lượng</p>
-                        </div>
-                        <div class="col-md-2 col-12 ">
-                            <p>Tổng</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- End List Title -->
-                <!-- Start Single List -->
-                <div class="infor-product-session"></div>
-
-                <h4 class="mt-4 mb-3">Địa chỉ người nhận: </h4>
-                <div class="infor-address-session"></div>
-
-                <div class="d-flex justify-content-between mt-4">
-                    <div class="d-flex align-items-center">
-                        <h5 class="time-checkout">Thời gian thanh toán: </h5>
-                        <h5> {{$time}}</h5>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <h5  class=" mb-0">Tổng tiền: </h5>
-                        <h5 class="total mb-0 ms-2"></h5>
-                    </div>
-
-                </div>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">🛒 Đơn hàng #{{ $order->id }}</h5>
+                <p><strong>Trạng thái:</strong> <span class="badge bg-warning" style="font-size: 16px">Đã đặt hàng</span></p>
+                <p><strong>Tổng tiền:</strong> {{ number_format($order->total, 0, ',', '.') }} VND</p>
+                <p><strong>Thời gian thanh toán:</strong> {{ $order->created_at->format('d/m/Y H:i:s') }}</p>
 
             </div>
-            <!-- End Items Area -->
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">📦 Sản phẩm đã mua</h5>
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $stt = 1; @endphp
+                        @foreach(json_decode($order->products, true) as $item)
+                        <tr>
+                            <td>{{ $stt++ }}</td>
+                            <td>{{ $item['title'] }}</td>
+                            <td>{{ $item['quantity'] }}</td>
+                            <td>{{ number_format($item['price'], 0, ',', '.') }} VND</td>
+                            <td>{{ number_format($item['subtotal'], 0, ',', '.') }} VND</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 📍 Thêm phần hiển thị địa chỉ giao hàng -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">📍 Địa chỉ giao hàng</h5>
+                <p><strong>Người nhận:</strong> {{ $order->Address->name ?? 'Không có thông tin' }}</p>
+                <p><strong>Số điện thoại:</strong> {{ $order->Address->sdt ?? 'Không có thông tin' }}</p>
+                <p><strong>Địa chỉ:</strong> {{ $order->Address->address ?? 'Không có thông tin' }}</p>
+                <p><strong>Phường/Xã:</strong> {{ $order->Address->wards ?? 'Không có thông tin' }}</p>
+                <p><strong>Quận/Huyện:</strong> {{ $order->Address->district ?? 'Không có thông tin' }}</p>
+                <p><strong>Tỉnh/Thành phố:</strong> {{ $order->Address->province ?? 'Không có thông tin' }}</p>
+                <p><strong>Quốc gia:</strong> {{ $order->Address->Country ?? 'Không có thông tin' }}</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ route('home') }}" class="btn btn-primary">Quay lại trang chủ</a>
         </div>
     </div>
+</div>
 @endsection

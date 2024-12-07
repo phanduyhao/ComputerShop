@@ -18,6 +18,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\PostController;
 use App\Http\Controllers\admin\AddressController;
 use App\Http\Controllers\admin\OrderController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,7 @@ Route::get('/posts', [MainPostController::class, 'index'])->name('post');
 Route::get('/posts/{slug}', [MainPostController::class, 'details'])->name('posts.details');
 
 // Danh sách sản phẩm theo danh mục
-Route::get('/products', [MainProductController::class, 'allProduct'])->name('products.allProduct');
+Route::get('/shop', [MainProductController::class, 'shop'])->name('products.shop');
 Route::get('/products/{categorySlug}', [MainProductController::class, 'ShowProduct'])->name('products.showProduct');
 
 // Chi tiết sản phẩm
@@ -49,6 +50,8 @@ Route::get('/contact',[PageController::class,'contact']);
 Route::get('/search',[App\Http\Controllers\HomeController::class,'search'])->name('search');
 
 Route::middleware(['auth'])->group(function() {
+    Route::post("checkout/Payment", [PaymentController::class, "payment"])->name("checkout.payment.vnpay");
+    Route::get("checkout/complete/{code}", [PaymentController::class, "complete"])->name("checkout.complete");
     // Thêm vào giỏ hàng
     Route::post('/addToCart',[MainProductController::class,'addToCart']);
 
@@ -102,6 +105,7 @@ Route::middleware(['auth'])->group(function() {
 
             //        Orders
             Route::resource('orders', OrderController::class);
+            Route::post('/orders/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
         });
     });

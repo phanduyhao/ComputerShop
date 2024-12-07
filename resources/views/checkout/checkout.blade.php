@@ -97,6 +97,7 @@
                 <form method="post" action="{{route('checkout.checkout')}}" id="form-process-checkout" class=" mt-4">
                     @csrf
                     <div id="total-price"></div>
+                    <div id="total-price2"></div>
                     <div class="error">
                         @include('admin.error')
                     </div>
@@ -128,7 +129,28 @@
                         <label for="" class="form-label fw-bold text-dark fs-6">Thôn / Xóm / Đường / Số nhà</label>
                         <input type="text" name="address" class="input-field form-control input-address" data-required="Mời nhập địa chỉ cụ thể" id="" aria-describedby="emailHelp">
                     </div>
-                    <button class="btn btn-success btn-checkout float-end fw-bold mt-2" type="submit">Thanh toán</button>
+                    <button type="button" class="btn btn-primary btn-thanhtoan mt-3" data-toggle="modal" data-target="#exampleModal">
+                        Thanh toán
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Chọn phương thức thanh toán</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body d-flex flex-column">
+                                    <button class="btn btn-warning mb-3"  type="submit" >Thanh toán trực tiếp</button>
+                                    <button id="vnpay-payment-btn" class="btn btn-danger">Thanh toán Online bằng VNPAY</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

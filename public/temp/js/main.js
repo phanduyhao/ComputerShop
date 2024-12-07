@@ -1,3 +1,4 @@
+
 // Tăng giảm số lượng sản phẩm
 
 $(document).ready(function() {
@@ -80,19 +81,36 @@ $(document).ready(function() {
     });
 });
 
-
 // Cập nhật giỏ hàng
 $(document).ready(function () {
     $('#updateCartButton').on('click', function (e) {
         e.preventDefault();
         var cartUpdates = [];
+        var isValid = true; // Cờ kiểm tra tính hợp lệ
     
         $('.quantity').each(function () {
             var cartId = $(this).data('cart-id');
             var newQuantity = $(this).val();
+            var title = $(this).closest('.single-item-list').find('.title-product h6').text(); // Lấy tên sản phẩm
+    
+            // Kiểm tra số lượng
+            if (newQuantity < 1) {
+                alert('Số lượng của sản phẩm "' + title + '" phải lớn hơn hoặc bằng 1.');
+                isValid = false;
+                return false; // Thoát khỏi vòng lặp
+            }else if(!Number.isInteger(Number(newQuantity)) ){
+                alert('Số lượng của sản phẩm "' + title + '" phải là số nguyên!');
+                isValid = false;
+                return false; // Thoát khỏi vòng lặp
+            }
     
             cartUpdates.push({ id: cartId, quantity: newQuantity });
         });
+    
+        // Nếu có lỗi, không thực hiện AJAX
+        if (!isValid) {
+            return;
+        }
     
         $.ajax({
             headers: {
@@ -119,29 +137,61 @@ $(document).ready(function () {
         });
     });
     
+    
 });
 
 // Checkout - lấy Session
 $(document).ready(function () {
     $('#buy-products').click(function(e) {
-        e.preventDefault()
+        e.preventDefault();
+
         // Lấy thông tin cần lưu vào sessionStorage
         var productInfos = [];
         var cartItems = $('.single-item-list');
+        var hasError = false; // Biến để kiểm tra lỗi
+        
         cartItems.each(function() {
             var thumb = $(this).find('.thumb-product').attr('src');
-            var title = $(this).find('.title-product').text()
-            var slug = $(this).find('.title-product').attr('href')
-            var price = $(this).find('.price-product').text()
-            var quantity = $(this).find('.quantity').val()
-            var subtotal = $(this).find('.subtotal').text()
-            productInfos.push({ thumb: thumb, title: title, slug: slug, price: price, quantity: quantity, subtotal:subtotal });
+            var title = $(this).find('.title-product').text();
+            var slug = $(this).find('.title-product').attr('href');
+            var price = $(this).find('.price-product').text();
+            var quantity = parseInt($(this).find('.quantity').val()); // Chuyển quantity thành số nguyên
+            var subtotal = $(this).find('.subtotal').text();
+            var size_color = $(this).find('.size_color').text();
+
+            // Kiểm tra nếu quantity < 1
+            if (quantity < 1) {
+                alert('Số lượng của sản phẩm "' + title + '" phải lớn hơn hoặc bằng 1.');
+                hasError = true; // Đánh dấu rằng có lỗi
+                return false; // Thoát khỏi vòng lặp each
+            }else if(!Number.isInteger(Number(quantity)) ){
+                alert('Số lượng của sản phẩm "' + title + '" phải là số nguyên!');
+                isValid = false;
+                return false; // Thoát khỏi vòng lặp
+            }
+
+            productInfos.push({ 
+                thumb: thumb, 
+                title: title, 
+                slug: slug, 
+                price: price, 
+                quantity: quantity, 
+                subtotal: subtotal, 
+                size_color: size_color 
+            });
         });
 
+        // Nếu có lỗi, không thực hiện chuyển trang
+        if (hasError) {
+            return;
+        }
+
+        // Lưu thông tin vào sessionStorage
         sessionStorage.setItem('productInfos', JSON.stringify(productInfos));
-        window.location.href= '/checkout'
+        window.location.href = '/checkout';
     });
 });
+
 
 // Hiển thị các sản phẩm ở session lên html
 $(document).ready(function () {
@@ -155,20 +205,20 @@ $(document).ready(function () {
         productInfos.forEach(function (product,index) {
             var subtotal =  parseFloat(product.subtotal.replace(/,/g, ''))
             total += subtotal;
-            var row='<div class="single-item-list text-center">'+
+            var row='<div class="single-item-list text-center border-bottom py-2">'+
                         '<div class="row align-items-center">'+
                             '<div class="col-1">'+index+'</div>'+
                             '<div class="col-md-1 col-12">'+
                                 '<img class="w-100" src="' + product.thumb + '" alt="' + product.title + '">'+
                                 '</div>'+
                                 '<div class="col-md-4 col-12">'+
-                                '<h6 class="title text-start"><a href="'+product.slug+'">' + product.title + '</a></h6>'+
+                                '<a href="'+product.slug+'"><h6 class="title text-start text-primary">' + product.title + '</h6></a>'+
                             '</div>'+
                             '<div class="col-md-2 col-12">'+
-                                '<span class="price">'+product.price+'</span>'+
+                                '<span class="price">'+product.size_color +'</span>'+
                             '</div>'+
                             '<div class="col-md-2 col-12 product-infor form-add-to-cart" >'+
-                                '<p>'+product.quantity+'</p>'+
+                                '<p class="mb-0">'+product.quantity+'</p>'+
                             '</div>'+
                             '<div class="col-md-2 col-12">'+
                                 '<span class="subtotal">'+product.subtotal+'</span>'+
@@ -179,8 +229,60 @@ $(document).ready(function () {
             $('.infor-product-session').append(row);
         });
         $('.total').append(formatNumber(total) + ' VNĐ')
+        $('#total-amount').val(total);
         var input_total = '<input type="text" name="total" hidden class="total-input" value="'+formatNumber(total) + ' VNĐ'+'">'
+        var input_total2 = '<input type="text" name="total2" hidden class="total-input" value="' + total + '">'
         $('#total-price').append(input_total)
+        $('#total-price2').append(input_total2);
+
+        // Kiểm tra các trường nhập địa chỉ trước khi mở modal thanh toán
+        $(".btn-thanhtoan").on("click", function (event) {
+            event.preventDefault(); // Chặn hành động mặc định ngay lập tức
+
+            let isValid = true;
+            $(".input-field").each(function () {
+                if ($(this).val().trim() === "") {
+                    isValid = false;
+                    return false; // Dừng vòng lặp ngay khi có trường trống
+                }
+            });
+    
+            if (!isValid) {
+                console.log("Nhập đầy đủ thông tin địa chỉ");
+            } else {
+                $("#exampleModal").modal("show"); // Chỉ hiển thị modal nếu nhập đầy đủ
+            }
+        });
+
+        // Xử lý thanh toán VNPAY
+        $("#vnpay-payment-btn").on("click", function (event) {
+            event.preventDefault();
+            let sdt = $(".input-sdt").val();
+            let name = $(".input-name").val();
+            let country = $(".input-country").val();
+            let province = $(".input-province").val();
+            let district = $(".input-district").val();
+            let wards = $(".input-wards").val();
+            let address = $(".input-address").val();
+            let form = $('<form>', {
+                action: "/checkout/Payment",
+                method: "POST"
+            });
+
+            form.append($('<input>', { type: 'hidden', name: '_token', value: $('meta[name="csrf-token"]').attr("content") }));
+            form.append($('<input>', { type: 'hidden', name: 'amount_money', value: total }));
+            form.append($('<input>', { type: 'hidden', name: 'bank_code', value: $("select[name='bank_code']").val() }));
+            form.append($('<input>', { type: 'hidden', name: 'sdt', value: sdt }));
+            form.append($('<input>', { type: 'hidden', name: 'name', value: name }));
+            form.append($('<input>', { type: 'hidden', name: 'Country', value: country }));
+            form.append($('<input>', { type: 'hidden', name: 'province', value: province }));
+            form.append($('<input>', { type: 'hidden', name: 'district', value: district }));
+            form.append($('<input>', { type: 'hidden', name: 'wards', value: wards }));
+            form.append($('<input>', { type: 'hidden', name: 'address', value: address }));
+
+            $("body").append(form);
+            form.submit();
+        });
     }
 });
 
@@ -239,3 +341,10 @@ $(document).ready(function () {
         });
     }
 });
+
+
+
+
+
+
+
