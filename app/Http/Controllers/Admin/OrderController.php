@@ -16,7 +16,7 @@ class OrderController extends Controller
         // Kiểm tra nếu có lọc trạng thái
         $query = Order::query();
         if ($status) {
-            $query->where('Status', $status);
+            $query->where('status', $status);
         }
     
         // Lấy danh sách đơn hàng, sắp xếp theo thời gian và phân trang
@@ -24,15 +24,15 @@ class OrderController extends Controller
     
         return view('admin.order.index', compact('orders'), [
             'title' => 'Danh sách đơn hàng',
-            'selectedStatus' => $status, // Truyền trạng thái hiện tại để hiển thị trên form
+            'selectedstatus' => $status, // Truyền trạng thái hiện tại để hiển thị trên form
         ]);
     }
-        public function updateStatus(Request $request)
+        public function updatestatus(Request $request)
     {
         $order = Order::find($request->order_id);
 
         if ($order) {
-            $order->Status = $request->status;
+            $order->status = $request->status;
             $order->save();
 
             return response()->json(['success' => true, 'message' => 'Cập nhật trạng thái thành công!']);

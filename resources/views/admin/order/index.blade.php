@@ -63,13 +63,13 @@
 
                             <td>{{$order->updated_at}}</td>
                             <td>
-                                @if($order->Status === 1)
+                                @if($order->status === 1)
                                     <select name="status" class="form-control bg-info text-dark fw-bold" id="status">
                                         <option selected value="1">Đã đặt hàng</option>
                                         <option value="2">Đang giao hàng</option>
                                         <option value="3">Giao hàng thành công</option>
                                     </select>
-                                @elseif($order->Status === 2)
+                                @elseif($order->status === 2)
                                     <select name="status" class="form-control bg-warning text-dark fw-bold" id="status">
                                         <option selected value="2">Đang giao hàng</option>
                                         <option value="1">Đã đặt hàng</option>
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
         select.addEventListener('change', function () {
             const row = select.closest('tr'); // Lấy dòng chứa đơn hàng
             const orderId = row.getAttribute('data-id'); // Lấy ID của đơn hàng
-            const newStatus = select.value; // Lấy trạng thái mới được chọn
+            const newstatus = select.value; // Lấy trạng thái mới được chọn
 
             // Tạo một request HTTP bằng Fetch API
             fetch("{{ route('orders.updateStatus') }}", {
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify({
                     order_id: orderId,
-                    status: newStatus
+                    status: newstatus
                 })
             })
             .then(response => response.json())

@@ -132,27 +132,27 @@ $(document).ready(function () {
 
 
 // Thêm mới dữ liệu
-$(document).ready(function(){
+// $(document).ready(function(){
 
-    // Create
-    $('.form-create button[type="submit"]').on('click', function(e){
-        e.preventDefault();
-        let form = $(this).closest('form');
-        let formID = form.attr('id');
-        if(validateForm(`#${formID}`)) {
-            form.submit();
-        }
-    });
+//     // Create
+//     $('.form-create button[type="submit"]').on('click', function(e){
+//         e.preventDefault();
+//         let form = $(this).closest('form');
+//         let formID = form.attr('id');
+//         // if(validateForm(`#${formID}`)) {
+//             form.submit();
+//         // }
+//     });
 
     // Edit
     $('.form-edit button[type="submit"]').on('click', function(e){
         e.preventDefault();
         let form = $(this).closest('form');
         let formID = form.attr('id');
-        if(validateForm(`#${formID}`)) {
+        // if(validateForm(`#${formID}`)) {
             form.submit();
-        }
+        // }
     });
 
 
-});
+// });
